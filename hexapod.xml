@@ -1,0 +1,218 @@
+<mujoco model="hexapod">
+  <compiler angle="degree" inertiafromgeom="true"/>
+  <option gravity="0 0 -9.81" integrator="RK4" timestep="0.002"/>
+
+  <asset>
+    <texture name="tile_tex" type="2d" builtin="checker"
+             rgb1="1 1 1" rgb2="0.2 0.2 0.2"
+             width="512" height="512"/>
+    <material name="tile_mat" texture="tile_tex" texrepeat="20 20" rgba="1 1 1 1"/>
+  </asset>
+
+  <default>
+    <joint limited="true" damping="0.2" armature="0.01"/>
+    <geom type="capsule" density="1200"
+          friction="1.0 0.01 0.001"
+          rgba="0.7 0.7 0.7 1"
+          contype="1" conaffinity="1"
+          solimp="0.95 0.99 0.001"
+          solref="0.02 1"/>
+
+    <!-- 발 전용 -->
+    <default class="foot">
+      <geom type="sphere"
+            friction="1.5 0.02 0.001"
+            margin="0.002"
+            contype="1" conaffinity="1"
+            solimp="0.95 0.995 0.001"
+            solref="0.01 1"/>
+    </default>
+
+    <!-- SG90 서보 기본값 (position 서보) -->
+    <default class="sg90">
+      <!-- kp는 필요시 15→20~25로 올려보기, forcerange는 SG90 기준 약간 여유 -->
+      <position kp="25" forcerange="-0.3 0.3"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <!-- 조명/카메라(선택) -->
+    <light name="sun" directional="true"
+       diffuse="0.2 0.2 0.2"
+       ambient="0.35 0.35 0.35"
+       specular="0.25 0.25 0.25"
+       pos="0 0 5" dir="0 0 -1"/>
+    <camera name="cam_fixed" pos="1.6 -2.2 1.0" euler="30 0 30"/>
+
+    <body name="terrain" pos="0 0 0">
+      <geom name="ground" type="plane" size="5 5 0.1" material="tile_mat" rgba="0.3 0.4 0.3 1"/>
+    </body>
+
+    <body name="torso" pos="0 0 0.35">
+      <joint name="root_free" type="free"/>
+      <geom name="torso_geom" type="box" size="0.20 0.12 0.04" rgba="0.2 0.2 0.8 1" mass="0.1"/>
+      <site name="imu_site" pos="0 0 0" size="0.01" rgba="1 0 0 0.3"/>
+
+      <!-- ===== Front-Left ===== -->
+      <body name="leg_fl_base" pos="0.20 0.14 0.00">
+        <joint name="yaw_fl" type="hinge" axis="0 0 1" range="0 90"/>
+        <geom  name="coxa_fl"  fromto="0 0 0  0.10 0 0" size="0.02" mass="0.01"/>
+
+        <body name="leg_fl_hip" pos="0.10 0 0">
+          <joint name="hip_fl" type="hinge" axis="0 1 0" range="-30 60"/>
+          <geom  name="femur_fl" fromto="0 0 0  0.12 0 0" size="0.02" mass="0.01"/>
+
+          <body name="leg_fl_knee" pos="0.12 0 0">
+            <joint name="knee_fl" type="hinge" axis="0 1 0" range="-90 0"/>
+            <geom  name="tibia_fl" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="1 0 0 1"/>
+            <geom  name="foot_fl"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <site  name="foot_site_fl" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
+          </body>
+        </body>
+      </body>
+
+      <!-- ===== Front-Right ===== -->
+      <body name="leg_fr_base" pos="0.20 -0.14 0.00">
+        <joint name="yaw_fr" type="hinge" axis="0 0 1" range="-90 0"/>
+        <geom  name="coxa_fr"  fromto="0 0 0  0.10 0 0" size="0.02" mass="0.01"/>
+
+        <body name="leg_fr_hip" pos="0.10 0 0">
+          <joint name="hip_fr" type="hinge" axis="0 1 0" range="-30 60"/>
+          <geom  name="femur_fr" fromto="0 0 0  0.12 0 0" size="0.02" mass="0.01"/>
+
+          <body name="leg_fr_knee" pos="0.12 0 0">
+            <joint name="knee_fr" type="hinge" axis="0 1 0" range="-90 0"/>
+            <geom  name="tibia_fr" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="1 0 0 1"/>
+            <geom  name="foot_fr"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <site  name="foot_site_fr" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
+          </body>
+        </body>
+      </body>
+
+      <!-- ===== Mid-Left ===== -->
+      <body name="leg_ml_base" pos="0.00 0.15 0.00">
+        <joint name="yaw_ml" type="hinge" axis="0 0 1" range="45 135"/>
+        <geom  name="coxa_ml"  fromto="0 0 0  0.10 0 0" size="0.02" mass="0.01"/>
+
+        <body name="leg_ml_hip" pos="0.10 0 0">
+          <joint name="hip_ml" type="hinge" axis="0 1 0" range="-30 60"/>
+          <geom  name="femur_ml" fromto="0 0 0  0.12 0 0" size="0.02" mass="0.01"/>
+
+          <body name="leg_ml_knee" pos="0.12 0 0">
+            <joint name="knee_ml" type="hinge" axis="0 1 0" range="-90 0"/>
+            <geom  name="tibia_ml" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01"/>
+            <geom  name="foot_ml" class="foot"  type="sphere" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <site  name="foot_site_ml" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
+          </body>
+        </body>
+      </body>
+
+      <!-- ===== Mid-Right ===== -->
+      <body name="leg_mr_base" pos="0.00 -0.15 0.00">
+        <joint name="yaw_mr" type="hinge" axis="0 0 1" range="-135 -45"/>
+        <geom  name="coxa_mr"  fromto="0 0 0  0.10 0 0" size="0.02" mass="0.01"/>
+
+        <body name="leg_mr_hip" pos="0.10 0 0">
+          <joint name="hip_mr" type="hinge" axis="0 1 0" range="-30 60"/>
+          <geom  name="femur_mr" fromto="0 0 0  0.12 0 0" size="0.02" mass="0.01"/>
+
+          <body name="leg_mr_knee" pos="0.12 0 0">
+            <joint name="knee_mr" type="hinge" axis="0 1 0" range="-90 0"/>
+            <geom  name="tibia_mr" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01"/>
+            <geom  name="foot_mr" class="foot"  type="sphere" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <site  name="foot_site_mr" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
+          </body>
+        </body>
+      </body>
+
+      <!-- ===== Rear-Left ===== -->
+      <body name="leg_rl_base" pos="-0.2 0.14 0.00">
+        <joint name="yaw_rl" type="hinge" axis="0 0 1" range="90 180"/>
+        <geom  name="coxa_rl"  fromto="0 0 0  0.10 0 0" size="0.02" mass="0.01"/>
+
+        <body name="leg_rl_hip" pos="0.10 0 0">
+          <joint name="hip_rl" type="hinge" axis="0 1 0" range="-30 60"/>
+          <geom  name="femur_rl" fromto="0 0 0  0.12 0 0" size="0.02" mass="0.01"/>
+
+          <body name="leg_rl_knee" pos="0.12 0 0">
+            <joint name="knee_rl" type="hinge" axis="0 1 0" range="-90 0"/>
+            <geom  name="tibia_rl" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01"/>
+            <geom  name="foot_rl" class="foot" type="sphere" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <site  name="foot_site_rl" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
+          </body>
+        </body>
+      </body>
+
+      <!-- ===== Rear-Right ===== -->
+      <body name="leg_rr_base" pos="-0.2 -0.14 0.00">
+        <joint name="yaw_rr" type="hinge" axis="0 0 1" range="-180 -90"/>
+        <geom  name="coxa_rr"  fromto="0 0 0  0.10 0 0" size="0.02" mass="0.01"/>
+
+        <body name="leg_rr_hip" pos="0.10 0 0">
+          <joint name="hip_rr" type="hinge" axis="0 1 0" range="-30 60"/>
+          <geom  name="femur_rr" fromto="0 0 0  0.12 0 0" size="0.02" mass="0.01"/>
+
+          <body name="leg_rr_knee" pos="0.12 0 0">
+            <joint name="knee_rr" type="hinge" axis="0 1 0" range="-90 0"/>
+            <geom  name="tibia_rr" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01"/>
+            <geom  name="foot_rr" class="foot" type="sphere" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <site  name="foot_site_rr" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <sensor>
+    <accelerometer name="imu_acc" site="imu_site"/>
+    <gyro          name="imu_gyro" site="imu_site"/>
+    <touch name="touch_fl" site="foot_site_fl"/>
+    <touch name="touch_fr" site="foot_site_fr"/>
+    <touch name="touch_ml" site="foot_site_ml"/>
+    <touch name="touch_mr" site="foot_site_mr"/>
+    <touch name="touch_rl" site="foot_site_rl"/>
+    <touch name="touch_rr" site="foot_site_rr"/>
+  </sensor>
+
+  <actuator>
+  <!-- Front-Left -->
+    <position class="sg90" name="a_yaw_fl"  joint="yaw_fl"  ctrllimited="true" ctrlrange="0.0000 1.5708"/>       <!-- 0~90° -->
+    <position class="sg90" name="a_hip_fl"  joint="hip_fl"  ctrllimited="true" ctrlrange="-0.5236 1.0472"/>      <!-- -30~60° -->
+    <position class="sg90" name="a_knee_fl" joint="knee_fl" ctrllimited="true" ctrlrange="-1.5708 0.0000"/>      <!-- -90~0° -->
+
+  <!-- Front-Right -->
+    <position class="sg90" name="a_yaw_fr"  joint="yaw_fr"  ctrllimited="true" ctrlrange="-1.5708 0.0000"/>      <!-- -90~0° -->
+    <position class="sg90" name="a_hip_fr"  joint="hip_fr"  ctrllimited="true" ctrlrange="-0.5236 1.0472"/>
+    <position class="sg90" name="a_knee_fr" joint="knee_fr" ctrllimited="true" ctrlrange="-1.5708 0.0000"/>
+
+  <!-- Mid-Left -->
+    <position class="sg90" name="a_yaw_ml"  joint="yaw_ml"  ctrllimited="true" ctrlrange="0.7854 2.3562"/>       <!-- 45~135° -->
+    <position class="sg90" name="a_hip_ml"  joint="hip_ml"  ctrllimited="true" ctrlrange="-0.5236 1.0472"/>
+    <position class="sg90" name="a_knee_ml" joint="knee_ml" ctrllimited="true" ctrlrange="-1.5708 0.0000"/>
+
+  <!-- Mid-Right -->
+    <position class="sg90" name="a_yaw_mr"  joint="yaw_mr"  ctrllimited="true" ctrlrange="-2.3562 -0.7854"/>     <!-- -135~-45° -->
+    <position class="sg90" name="a_hip_mr"  joint="hip_mr"  ctrllimited="true" ctrlrange="-0.5236 1.0472"/>
+    <position class="sg90" name="a_knee_mr" joint="knee_mr" ctrllimited="true" ctrlrange="-1.5708 0.0000"/>
+
+  <!-- Rear-Left -->
+    <position class="sg90" name="a_yaw_rl"  joint="yaw_rl"  ctrllimited="true" ctrlrange="1.5708 3.1416"/>       <!-- 90~180° -->
+    <position class="sg90" name="a_hip_rl"  joint="hip_rl"  ctrllimited="true" ctrlrange="-0.5236 1.0472"/>
+    <position class="sg90" name="a_knee_rl" joint="knee_rl" ctrllimited="true" ctrlrange="-1.5708 0.0000"/>
+
+  <!-- Rear-Right -->
+    <position class="sg90" name="a_yaw_rr"  joint="yaw_rr"  ctrllimited="true" ctrlrange="-3.1416 -1.5708"/>     <!-- -180~-90° -->
+    <position class="sg90" name="a_hip_rr"  joint="hip_rr"  ctrllimited="true" ctrlrange="-0.5236 1.0472"/>
+    <position class="sg90" name="a_knee_rr" joint="knee_rr" ctrllimited="true" ctrlrange="-1.5708 0.0000"/>
+  </actuator>
+
+  <!-- 시작 포즈 (이름을 safe_start로 통일), 라디안으로.. mujoco에서 불러올 때 라디안으로 쓴다고 함 -->
+  <keyframe> 
+    <key name="safe_start" qpos="
+      0 0 0.26   1 0 0 0
+      0.5236  0.6 -0.3    -0.5236  0.6 -0.3
+      1.5708  0.7 -0.3    -1.5708  0.7 -0.3
+      2.6180  0.6 -0.3    -2.6180  0.6 -0.3
+    "/>
+  </keyframe>
+</mujoco>

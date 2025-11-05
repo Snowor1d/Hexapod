@@ -1,0 +1,12 @@
+Tue Nov  4 21:52:31 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 0.0580.
+
+Tue Nov  4 21:59:21 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 0.0580.
+
+Tue Nov  4 22:16:46 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 0.0580.
+
+Tue Nov  4 22:26:34 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 0.0580.
+
