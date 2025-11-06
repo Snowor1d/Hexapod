@@ -8,7 +8,7 @@ from stable_baselines3.common.logger import configure
 from hexapod_env import HexapodEnv
 
 LOGDIR = "./logs_hexapod"
-XML_PATH = "hexapod.xml"
+XML_PATH = "hexapod_uneven.xml"
 N_ENVS = 4
 
 # 옵션: CPU 스레드 제한(발열/스로틀링 완화)
@@ -57,7 +57,7 @@ def main():
     logger = configure(LOGDIR, ["tensorboard", "stdout"])
     model.set_logger(logger)
 
-    model.learn(total_timesteps=1_000_000)
+    model.learn(total_timesteps=10_000_000)
     model.save(os.path.join(LOGDIR, "ppo_hexapod"))
     venv.close()
 

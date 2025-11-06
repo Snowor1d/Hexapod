@@ -4,10 +4,10 @@ from stable_baselines3 import PPO
 from hexapod_env import HexapodEnv   # 네가 만든 환경
 import numpy as np
 
-MODEL_PATH = "./logs_hexapod/ppo_hexapod_uneven.zip"   # 저장된 모델 경로
+MODEL_PATH = "./logs_hexapod/ppo_hexapod.zip"   # 저장된 모델 경로
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-XML_PATH = os.path.join(script_dir, "hexapod_uneven.xml")
+XML_PATH = os.path.join(script_dir, "hexapod.xml")
     
 print(f"Loading XML from: {XML_PATH}") # 경로 확인용
 
@@ -30,12 +30,11 @@ def main():
 
     obs, _ = env.reset()
     print("Simulation started. Press Ctrl+C to exit.")
-
     try:
         for step in range(50000):
             action, _ = model.predict(obs, deterministic=True)
             obs, reward, terminated, truncated, info = env.step(action)
-            
+            time.sleep(10)
             time.sleep(0.01)   # 속도 조절용
             if terminated or truncated:
                 print("Episode ended. Resetting...")

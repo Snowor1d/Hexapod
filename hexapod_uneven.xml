@@ -7,6 +7,10 @@
              rgb1="1 1 1" rgb2="0.2 0.2 0.2"
              width="512" height="512"/>
     <material name="tile_mat" texture="tile_tex" texrepeat="20 20" rgba="1 1 1 1"/>
+    <material name="MatPlane" reflectance="0.0" shininess="1" specular="1" texrepeat="10 10" texture="texplane"/>
+    <texture name="texplane" type="2d" width="1" height="1" file="grass_tile.png"/>
+    <!-- <hfield name="hill" file="perlin.png" size="1.8421052631578947 1.2 0.6 0.1" /> -->
+    <hfield name="hill" file="perlin.png" size="8 8 2 0.1"/>  <!-- 가로 8m, 세로 8m, 최대높이 1.5m -->
   </asset>
 
   <default>
@@ -44,9 +48,12 @@
        pos="0 0 5" dir="0 0 -1"/>
     <camera name="cam_fixed" pos="1.6 -2.2 1.0" euler="30 0 30"/>
 
-    <body name="terrain" pos="0 0 0">
-      <geom name="ground" type="plane" size="5 5 0.1" material="tile_mat" rgba="0.3 0.4 0.3 1"/>
-    </body>
+    <!-- 험지: plane 지우고 hfield만 사용 -->
+    <geom name="floor" conaffinity="1" condim="3" material="MatPlane" 
+            pos="0 0 0" type="hfield" hfield="hill"
+            friction="1.5 0.1 0.01"   
+            solimp="0.9 0.95 0.001"    
+            solref="0.02 1"/>          
 
     <body name="torso" pos="0 0 0.35">
       <joint name="root_free" type="free"/>
@@ -209,7 +216,7 @@
   <!-- 시작 포즈 (이름을 safe_start로 통일), 라디안으로.. mujoco에서 불러올 때 라디안으로 쓴다고 함 -->
   <keyframe> 
     <key name="safe_start" qpos="
-      0 0 0.26   1 0 0 0
+      0 0 1.4   1 0 0 0
       0.5236  -0.8 2    -0.5236  -0.8 2
       1.5708  -0.8 2    -1.5708  -0.8 2
       2.6180  -0.8 2    -2.6180  -0.8 2

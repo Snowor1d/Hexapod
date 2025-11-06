@@ -198,6 +198,7 @@ class HexapodEnv(Env):
         # 선속도 x (free root의 qvel[0]이 world 좌표계 x-속도)
         xd = float(self.data.qvel[0])
         zd = float(self.data.qvel[2])
+        zpos = float(self.data.qpos[2])
 
         # free joint 쿼터니언 (w, x, y, z)
         qw, qx, qy, qz = self.data.qpos[3:7]
@@ -214,12 +215,16 @@ class HexapodEnv(Env):
         yaw_rew = np.square(2 ** math.acos(qw)) * .7
         ctrl_pen_rew = np.mean(np.square(action)) * 0.01 # 확인필요
         zd_rew = np.square(zd) * 0.5
+        z_rew = 0
+        if (zpos < 0.1):
+            z_rew += (0.1-zpos)*20
+
         # pitch, roll 페널티
         pitch_rew = (pitch * 4.0) ** 2
         roll_rew  = (roll  * 3.0) ** 2
-
+        
         # 최종 보상
-        reward = velocity_rew - yaw_rew - zd_rew
+        reward = velocity_rew - yaw_rew
 
         done = self.step_ctr > self.max_steps
 
