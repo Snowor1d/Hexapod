@@ -50,7 +50,7 @@ def main():
         gae_lambda=0.95,
         clip_range=0.2,
         ent_coef=0.001,
-        vf_coef=0.5,
+        vf_coef=0.5, 
         verbose=1,
     )
 

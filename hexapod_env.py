@@ -47,6 +47,7 @@ class HexapodEnv(Env):
         self.v_tar = float(target_speed)
         self.obs_clip = float(obs_clip)
         self.max_steps = 500
+        self._ep_start_x = 0.0
 
         self.prev_u = None
         self.max_du = 0.1
@@ -171,7 +172,7 @@ class HexapodEnv(Env):
             self.data.ctrl[:] = 0
 
         mujoco.mj_forward(self.model, self.data) 
-
+        self._ep_start_x = float(self.data.qpos[0])
         for i, aid in enumerate(self.act_ids):
             self.data.ctrl[aid] = self.data.qpos[self.qadr[i]]
 
@@ -212,7 +213,7 @@ class HexapodEnv(Env):
 
         # yaw 편차(자세 편차)를 쿼터니언 스칼라부(qw)로부터 계산: 2*acos(qw)
         # 수치 안전을 위해 clip
-        yaw_rew = np.square(2 ** math.acos(qw)) * .7
+        yaw_rew = np.square(2 * math.acos(qw)) * .7
         ctrl_pen_rew = np.mean(np.square(action)) * 0.01 # 확인필요
         zd_rew = np.square(zd) * 0.5
         z_rew = 0
@@ -224,10 +225,15 @@ class HexapodEnv(Env):
         roll_rew  = (roll  * 3.0) ** 2
         
         # 최종 보상
-        reward = velocity_rew - yaw_rew
+        reward = velocity_rew - yaw_rew -zd_rew
 
         done = self.step_ctr > self.max_steps
-
+        if done:
+            cur_x = float(slef.data.qpos[0])
+            dx = cur_x - self._ep_start_x
+            ep_info = info.get("episode", {})
+            ep_info["dx"] = dx
+            info["episode"] = ep_info
         obs = self._obs()
         info = {
             "xd": xd,

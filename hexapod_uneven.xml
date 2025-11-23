@@ -25,7 +25,7 @@
     <!-- 발 전용 -->
     <default class="foot">
       <geom type="sphere"
-            friction="1.5 0.02 0.001"
+            friction="2.5 0.08 0.01"
             margin="0.002"
             contype="1" conaffinity="1"
             solimp="0.95 0.995 0.001"
@@ -58,6 +58,8 @@
     <body name="torso" pos="0 0 0.35">
       <joint name="root_free" type="free"/>
       <geom name="torso_geom" type="box" size="0.20 0.12 0.04" rgba="0.2 0.2 0.8 1" mass="0.1"/>
+        <!-- ✅ 터치 감지용 site (박스형, torso와 거의 동일 크기) -->
+      <site name="torso_touch_site" type="box" pos="0 0 0" size="0.205 0.125 0.045" rgba="1 0 0 0.1"/>
       <site name="imu_site" pos="0 0 0" size="0.01" rgba="1 0 0 0.3"/>
 
       <!-- ===== Front-Left ===== -->
@@ -71,8 +73,8 @@
 
           <body name="leg_fl_knee" pos="0.12 0 0">
             <joint name="knee_fl" type="hinge" axis="0 1 0" range="-20 120"/>
-            <geom  name="tibia_fl" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="1 0 0 1"/>
-            <geom  name="foot_fl"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <geom  name="tibia_fl" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="0.1 0.4 1.0 1"/>
+            <geom  name="foot_fl"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.4 1.0 1"/>
             <site  name="foot_site_fl" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
           </body>
         </body>
@@ -89,8 +91,8 @@
 
           <body name="leg_fr_knee" pos="0.12 0 0">
             <joint name="knee_fr" type="hinge" axis="0 1 0" range="-20 120"/>
-            <geom  name="tibia_fr" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="1 0 0 1"/>
-            <geom  name="foot_fr"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <geom  name="tibia_fr" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="0.1 0.4 1.0 1"/>
+            <geom  name="foot_fr"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.4 1.0 1"/>
             <site  name="foot_site_fr" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
           </body>
         </body>
@@ -179,6 +181,7 @@
     <touch name="touch_mr" site="foot_site_mr"/>
     <touch name="touch_rl" site="foot_site_rl"/>
     <touch name="touch_rr" site="foot_site_rr"/>
+    <touch name="touch_torso" site="torso_touch_site"/>
   </sensor>
 
   <actuator>

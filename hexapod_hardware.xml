@@ -1,0 +1,636 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco>
+  <!-- 시뮬레이션 옵션: 중력/적분기/시간스텝 -->
+  <option integrator="implicitfast" timestep="0.002" solver="Newton" gravity="0 0 -9.81"/>
+  <compiler meshdir="meshes" autolimits="true" inertiafromgeom="true" angle="radian" />
+
+  <!-- 공통 기본값 + 재질 클래스(같은 계열 파트가 물성 공유) -->
+  <default>
+    <joint damping="0.05" armature="0.02" limited="false"/>
+    <geom conaffinity="1" contype="1" condim="3" friction="1.0 0.5 0.01" margin="0"/>
+
+    <!-- 질량 직접 지정 -->
+    <default class="torso">
+      <geom mass="0.2" friction="0.8 0.3 0.01"/>
+    </default>
+
+    <default class="servo">
+      <geom mass="0.01" friction="0.8 0.3 0.01"/>
+    </default>
+
+    <default class="motor_bracket">
+      <geom mass="0.001" friction="0.8 0.3 0.01"/>
+    </default>
+
+    <default class="leg_adapter">
+      <geom mass="0.04" friction="1.2 0.6 0.01"/>
+    </default>
+
+    <default class="leg_adapter_hip">
+      <geom mass="0.04" friction="1.2 0.6 0.01"/>
+    </default>
+
+    <default class="leg_adapter_knee">
+      <geom mass="0.04" friction="1.2 0.6 0.01"/>
+    </default>
+
+    <default class="leg_foot">
+      <geom mass="0.001" friction="4.0 0.8 0.01"/>
+    </default>
+
+    <default class="battery_pack">
+      <geom mass="0.1" friction="1.8 0.8 0.01"/>
+    </default>
+
+
+    <!-- SG90 -->
+    <default class="sg90">
+      <position kp="50" forcelimited="true" forcerange="-0.18 0.18"/> 
+    </default>
+  </default>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072" />
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300" />
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.1" />
+
+    <!-- Compound/Part__Feature/Solid → 요청 이름으로 전면 변경 -->
+    <mesh name="torso" file="Compound.stl" scale="0.001 0.001 0.001" />
+    <material name="torso" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo1" file="Compound001.stl" scale="0.001 0.001 0.001" />
+    <material name="servo1" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket2" file="Solid.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket2" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter1" file="Part__Feature.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter1" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo2" file="Compound002.stl" scale="0.001 0.001 0.001" />
+    <material name="servo2" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket1" file="Part__Feature003.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket1" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adpater_hip1" file="Part__Feature004.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adpater_hip1" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo3" file="Compound003.stl" scale="0.001 0.001 0.001" />
+    <material name="servo3" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket3" file="Solid001.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket3" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_knee1" file="Part__Feature005.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_knee1" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_foot1" file="Part__Feature006.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_foot1" rgba="0.627451 0.627451 0.627451 1" shininess="0.9" />
+
+    <mesh name="servo4" file="Compound004.stl" scale="0.001 0.001 0.001" />
+    <material name="servo4" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket4" file="Solid002.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket4" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter2" file="Part__Feature007.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter2" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo5" file="Compound005.stl" scale="0.001 0.001 0.001" />
+    <material name="servo5" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket5" file="Solid003.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket5" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adpater_hip2" file="Part__Feature008.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adpater_hip2" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo6" file="Compound006.stl" scale="0.001 0.001 0.001" />
+    <material name="servo6" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_knee2" file="Part__Feature009.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_knee2" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_foot2" file="Part__Feature010.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_foot2" rgba="0.627451 0.627451 0.627451 1" shininess="0.9" />
+
+    <mesh name="servo7" file="Compound007.stl" scale="0.001 0.001 0.001" />
+    <material name="servo7" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket6" file="Solid004.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket6" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter3" file="Part__Feature011.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter3" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo8" file="Compound008.stl" scale="0.001 0.001 0.001" />
+    <material name="servo8" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket7" file="Solid005.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket7" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_hip3" file="Part__Feature012.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_hip3" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo9" file="Compound009.stl" scale="0.001 0.001 0.001" />
+    <material name="servo9" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket8" file="Solid006.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket8" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_knee3" file="Part__Feature013.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_knee3" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo10" file="Compound010.stl" scale="0.001 0.001 0.001" />
+    <material name="servo10" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket9" file="Solid008.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket9" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter4" file="Part__Feature014.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter4" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo11" file="Compound011.stl" scale="0.001 0.001 0.001" />
+    <material name="servo11" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket10" file="Solid009.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket10" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_hip4" file="Part__Feature015.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_hip4" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo12" file="Compound012.stl" scale="0.001 0.001 0.001" />
+    <material name="servo12" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket11" file="Solid010.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket11" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_knee4" file="Part__Feature016.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_knee4" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo13" file="Compound013.stl" scale="0.001 0.001 0.001" />
+    <material name="servo13" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket12" file="Solid011.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket12" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter5" file="Part__Feature017.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter5" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo14" file="Compound014.stl" scale="0.001 0.001 0.001" />
+    <material name="servo14" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket13" file="Solid012.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket13" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_hip5" file="Part__Feature018.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_hip5" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo15" file="Compound015.stl" scale="0.001 0.001 0.001" />
+    <material name="servo15" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket14" file="Solid013.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket14" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="motor_bracket15" file="Solid014.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket15" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_knee5" file="Part__Feature019.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_knee5" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo16" file="Compound016.stl" scale="0.001 0.001 0.001" />
+    <material name="servo16" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter6" file="Part__Feature020.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter6" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo17" file="Compound017.stl" scale="0.001 0.001 0.001" />
+    <material name="servo17" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket16" file="Solid015.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket16" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_hip6" file="Part__Feature021.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_hip6" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="servo18" file="Compound018.stl" scale="0.001 0.001 0.001" />
+    <material name="servo18" rgba="0.3450980484 0.3686274588 0.8235294223 1" shininess="0.9" />
+
+    <mesh name="motor_bracket17" file="Solid016.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket17" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_adapter_knee6" file="Part__Feature022.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_adapter_knee6" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="Leg_foot3" file="Part__Feature023.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_foot3" rgba="0.627451 0.627451 0.627451 1" shininess="0.9" />
+
+    <mesh name="Leg_foot4" file="Part__Feature024.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_foot4" rgba="0.627451 0.627451 0.627451 1" shininess="0.9" />
+
+    <mesh name="Leg_foot5" file="Part__Feature025.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_foot5" rgba="0.627451 0.627451 0.627451 1" shininess="0.9" />
+
+    <mesh name="Leg_foot6" file="Part__Feature026.stl" scale="0.001 0.001 0.001" />
+    <material name="Leg_foot6" rgba="0.627451 0.627451 0.627451 1" shininess="0.9" />
+
+    <mesh name="battery_pack" file="Part__Feature027.stl" scale="0.001 0.001 0.001" />
+    <material name="battery_pack" rgba="1 1 1 1" shininess="0.9" />
+
+    <mesh name="motor_bracket18" file="Part__Feature028.stl" scale="0.001 0.001 0.001" />
+    <material name="motor_bracket18" rgba="1 1 1 1" shininess="0.9" />
+  </asset>
+
+  <worldbody>
+    <!-- 조명 + 바닥(접촉 활성) -->
+    <light diffuse=".8 .8 .8" pos="0 0 4" dir="0 0 -1" />
+    <light diffuse=".6 .6 .6" pos="4 4 4" dir="-1 -1 -1" />
+    <geom name="floor" pos="0 0 -0.01528462486233359" size="0 0 1" type="plane" material="groundplane"
+          contype="7" conaffinity="7" friction="1.5 0.2 0.01"/>
+
+    <!-- 어셈블리(원본 트리 유지, 이름·재질·메시만 치환) -->
+    <body name="torso" pos="0 0 0.2" quat="1 0 0 0">
+      <joint name="root_free" type="free"/>
+      <geom class="torso" type="mesh" name="torso geom" mesh="torso" material="torso" contype="2" conaffinity="1" />
+      <site name="imu_site" pos="0.1 -0.05 0" size="0.01" rgba="1 0 0 0.1"/>
+      <body name="servo1" pos="0 0 0" quat="1 0 0 0">
+        <geom class="servo" type="mesh" name="servo1 geom" mesh="servo1" material="servo1" contype="1" conaffinity="0" />
+
+        <body name="motor_bracket2" pos="0 0 0" quat="1 0 0 0">
+          <geom class="motor_bracket" type="mesh" name="motor_bracket2 geom" mesh="motor_bracket2" material="motor_bracket2" contype="1" conaffinity="0" />
+        </body>
+
+        <body name="Leg_adapter1" pos="0 0 0" quat="1 0 0 0">
+          <geom class="leg_adapter" type="mesh" name="Leg_adapter1 geom" mesh="Leg_adapter1" material="Leg_adapter1" contype="4" conaffinity="5" />
+
+          <body name="servo2" pos="0 0 0" quat="1 0 0 0">
+            <geom class="servo" type="mesh" name="servo2 geom" mesh="servo2" material="servo2" contype="1" conaffinity="0" />
+
+            <body name="motor_bracket1" pos="0 0 0" quat="1 0 0 0">
+              <geom class="motor_bracket" type="mesh" name="motor_bracket1 geom" mesh="motor_bracket1" material="motor_bracket1" contype="1" conaffinity="0" />
+            </body>
+
+            <body name="Leg_adpater_hip1" pos="0 0 0" quat="1 0 0 0">
+              <geom class="leg_adapter" type="mesh" name="Leg_adpater_hip1 geom" mesh="Leg_adpater_hip1" material="Leg_adpater_hip1" contype="4" conaffinity="5" />
+
+              <body name="servo3" pos="0 0 0" quat="1 0 0 0">
+                <geom class="servo" type="mesh" name="servo3 geom" mesh="servo3" material="servo3" contype="1" conaffinity="0" />
+
+                <body name="motor_bracket3" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="motor_bracket" type="mesh" name="motor_bracket3 geom" mesh="motor_bracket3" material="motor_bracket3" contype="1" conaffinity="0" />
+                </body>
+
+                <body name="Leg_adapter_knee1" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="leg_adapter" type="mesh" name="Leg_adapter_knee1 geom" mesh="Leg_adapter_knee1" material="Leg_adapter_knee1" contype="4" conaffinity="5" />
+                  <body name="Leg_foot1" pos="0 0 0" quat="1 0 0 0">
+                    <geom class="leg_foot" type="mesh" name="Leg_foot1 geom" mesh="Leg_foot1" material="Leg_foot1" contype="1" conaffinity="1" />
+                    <site name="foot_site1" pos="0.048 0.097 0.041" size="0.005" rgba="0 0 1 0.1"/>
+                  </body>
+                </body>
+
+                <!-- Left rear leg joints (원본 Revolute002,001,Revolute) -->
+                <joint type="hinge" name="left_rear_knee" pos="0.022370026219401994 0.031012283464067862 0.07694119331606378"
+                       axis="-0.9563412316668666 0.28710772052817757 0.05459492125659976" range="-1.54 1.54"/>
+              </body>
+            </body>
+
+            <joint type="hinge" name="left_rear_hip" pos="0.019688740755565006 0.03415521719034734 0.034325793800705086"
+                   axis="-0.956341231666867 0.2871077205281774 0.05459492125659994" range="-1.1 1.1"/>
+          </body>
+        </body>
+
+        <joint type="hinge" name="left_rear_yaw" pos="0.021669007652103806 -0.014010170976901572 0.04316298372266052"
+               axis="-0.004768051882588358 -0.20211048929575764 0.9793511197715938" range="-0.8 0.8"/>
+      </body>
+
+      <body name="servo4" pos="0 0 0" quat="1 0 0 0">
+        <geom class="servo" type="mesh" name="servo4 geom" mesh="servo4" material="servo4" contype="1" conaffinity="0" />
+        <body name="motor_bracket4" pos="0 0 0" quat="1 0 0 0">
+          <geom class="motor_bracket" type="mesh" name="motor_bracket4 geom" mesh="motor_bracket4" material="motor_bracket4" contype="1" conaffinity="0" />
+        </body>
+        <body name="Leg_adapter2" pos="0 0 0" quat="1 0 0 0">
+          <geom class="leg_adapter" type="mesh" name="Leg_adapter2 geom" mesh="Leg_adapter2" material="Leg_adapter2" contype="4" conaffinity="5" />
+          <body name="servo5" pos="0 0 0" quat="1 0 0 0">
+            <geom class="servo" type="mesh" name="servo5 geom" mesh="servo5" material="servo5" contype="1" conaffinity="0" />
+            <body name="motor_bracket5" pos="0 0 0" quat="1 0 0 0">
+              <geom class="motor_bracket" type="mesh" name="motor_bracket5 geom" mesh="motor_bracket5" material="motor_bracket5" contype="1" conaffinity="0" />
+            </body>
+            <body name="Leg_adpater_hip2" pos="0 0 0" quat="1 0 0 0">
+              <geom class="leg_adapter" type="mesh" name="Leg_adpater_hip2 geom" mesh="Leg_adpater_hip2" material="Leg_adpater_hip2" contype="4" conaffinity="5" />
+              <body name="servo6" pos="0 0 0" quat="1 0 0 0">
+                <geom class="servo" type="mesh" name="servo6 geom" mesh="servo6" material="servo6" contype="1" conaffinity="0" />
+                <body name="Leg_adapter_knee2" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="leg_adapter" type="mesh" name="Leg_adapter_knee2 geom" mesh="Leg_adapter_knee2" material="Leg_adapter_knee2" contype="4" conaffinity="5" />
+                  <body name="Leg_foot2" pos="0 0 0" quat="1 0 0 0">
+                    <geom class="leg_foot" type="mesh" name="Leg_foot2 geom" mesh="Leg_foot2" material="Leg_foot2" contype="1" conaffinity="1" />
+                    <site name="foot_site6" pos="-0.04 -0.12 -0.041" size="0.005" rgba="1 0 0 0.1"/>
+                  </body>
+                </body>
+                <body name="motor_bracket15" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="motor_bracket" type="mesh" name="motor_bracket15 geom" mesh="motor_bracket15" material="motor_bracket15" contype="1" conaffinity="0" />
+                </body>
+
+                <joint type="hinge" name="right_rear_knee" pos="-0.020518617529664693 -0.12707008443856538 0.03476432536182847"
+                       axis="0.7167420904680235 -0.6836293775835769 -0.1375923321127283" range="-0.2 2.0"/>
+              </body>
+            </body>
+
+            <body name="motor_bracket18" pos="0 0 0" quat="1 0 0 0">
+              <geom class="motor_bracket" type="mesh" name="motor_bracket18 geom" mesh="motor_bracket18" material="motor_bracket18" contype="1" conaffinity="0" />
+            </body>
+
+            <joint type="hinge" name="right_rear_hip" pos="-0.0016001089697122346 -0.1028956288332402 0.004917628223733493"
+                   axis="0.7167420904680231 -0.6836293775835771 -0.13759233211272742" range="-1.1 1.1"/>
+          </body>
+        </body>
+
+        <joint type="hinge" name="right_rear_yaw" pos="0.017244024622226815 -0.06577264093294014 0.02939587159459921"
+               axis="0.004768051882588392 0.20211048929575767 -0.9793511197715941" range="-0.8 0.8"/>
+      </body>
+
+      <body name="servo7" pos="0 0 0" quat="1 0 0 0">
+        <geom class="servo" type="mesh" name="servo7 geom" mesh="servo7" material="servo7" contype="1" conaffinity="0" />
+        <body name="motor_bracket6" pos="0 0 0" quat="1 0 0 0">
+          <geom class="motor_bracket" type="mesh" name="motor_bracket6 geom" mesh="motor_bracket6" material="motor_bracket6" contype="1" conaffinity="0" />
+        </body>
+        <body name="Leg_adapter3" pos="0 0 0" quat="1 0 0 0">
+          <geom class="leg_adapter" type="mesh" name="Leg_adapter3 geom" mesh="Leg_adapter3" material="Leg_adapter3" contype="4" conaffinity="5" />
+          <body name="servo8" pos="0 0 0" quat="1 0 0 0">
+            <geom class="servo" type="mesh" name="servo8 geom" mesh="servo8" material="servo8" contype="1" conaffinity="0" />
+            <body name="motor_bracket7" pos="0 0 0" quat="1 0 0 0">
+              <geom class="motor_bracket" type="mesh" name="motor_bracket7 geom" mesh="motor_bracket7" material="motor_bracket7" contype="1" conaffinity="0" />
+            </body>
+            <body name="Leg_adapter_hip3" pos="0 0 0" quat="1 0 0 0">
+              <geom class="leg_adapter" type="mesh" name="Leg_adapter_hip3 geom" mesh="Leg_adapter_hip3" material="Leg_adapter_hip3" contype="4" conaffinity="5" />
+              <body name="servo9" pos="0 0 0" quat="1 0 0 0">
+                <geom class="servo" type="mesh" name="servo9 geom" mesh="servo9" material="servo9" contype="1" conaffinity="0" />
+                <body name="motor_bracket8" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="motor_bracket" type="mesh" name="motor_bracket8 geom" mesh="motor_bracket8" material="motor_bracket8" contype="1" conaffinity="0" />
+                </body>
+                <body name="Leg_adapter_knee3" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="leg_adapter" type="mesh" name="Leg_adapter_knee3 geom" mesh="Leg_adapter_knee3" material="Leg_adapter_knee3" contype="4" conaffinity="5" />
+                  <body name="Leg_foot5" pos="0 0 0" quat="1 0 0 0">
+                    <site name="foot_site2" pos="0.07 0.025 -0.017" size="0.005" rgba="0 0 1 0.1"/>
+                    <geom class="leg_foot" type="mesh" name="Leg_foot5 geom" mesh="Leg_foot5" material="Leg_foot5" contype="1" conaffinity="1" />
+                  </body>
+                </body>
+
+                <joint type="hinge" name="left_mid_knee" pos="0.06309686698627572 0.06836539163590695 0.047819800562966475"
+                       axis="-0.9978083728613792 0.06559812480556398 0.00867969295081239" range="-0.2 2.0"/>
+              </body>
+            </body>
+
+            <joint type="hinge" name="left_mid_hip" pos="0.059207555249631186 0.028629895119875504 0.03235683930583162"
+                   axis="-0.9978083728613796 0.06559812480556453 0.008679692950812473" range="-1.1 1.1"/>
+          </body>
+        </body>
+
+        <joint type="hinge" name="left_mid_yaw" pos="0.07151134601218004 -0.017502982012692053 0.03962157469969464"
+               axis="-0.004768051882588384 -0.2021104892957577 0.979351119771594" range="-0.8 0.8"/>
+      </body>
+
+      <body name="servo10" pos="0 0 0" quat="1 0 0 0">
+        <geom class="servo" type="mesh" name="servo10 geom" mesh="servo10" material="servo10" contype="1" conaffinity="0" />
+        <body name="motor_bracket9" pos="0 0 0" quat="1 0 0 0">
+          <geom class="motor_bracket" type="mesh" name="motor_bracket9 geom" mesh="motor_bracket9" material="motor_bracket9" contype="0" conaffinity="0" />
+        </body>
+        <body name="Leg_adapter4" pos="0 0 0" quat="1 0 0 0">
+          <geom class="leg_adapter" type="mesh" name="Leg_adapter4 geom" mesh="Leg_adapter4" material="Leg_adapter4" contype="4" conaffinity="5" />
+          <body name="servo11" pos="0 0 0" quat="1 0 0 0">
+            <geom class="servo" type="mesh" name="servo11 geom" mesh="servo11" material="servo11" contype="1" conaffinity="0" />
+            <body name="motor_bracket10" pos="0 0 0" quat="1 0 0 0">
+              <geom class="motor_bracket" type="mesh" name="motor_bracket10 geom" mesh="motor_bracket10" material="motor_bracket10" contype="0" conaffinity="0" />
+            </body>
+            <body name="Leg_adapter_hip4" pos="0 0 0" quat="1 0 0 0">
+              <geom class="leg_adapter" type="mesh" name="Leg_adapter_hip4 geom" mesh="Leg_adapter_hip4" material="Leg_adapter_hip4" contype="4" conaffinity="5" />
+              <body name="servo12" pos="0 0 0" quat="1 0 0 0">
+                <geom class="servo" type="mesh" name="servo12 geom" mesh="servo12" material="servo12" contype="1" conaffinity="0" />
+                <body name="motor_bracket11" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="motor_bracket" type="mesh" name="motor_bracket11 geom" mesh="motor_bracket11" material="motor_bracket11" contype="0" conaffinity="0" />
+                </body>
+                <body name="Leg_adapter_knee4" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="leg_adapter" type="mesh" name="Leg_adapter_knee4 geom" mesh="Leg_adapter_knee4" material="Leg_adapter_knee4" contype="4" conaffinity="5" />
+                  <body name="Leg_foot6" pos="0 0 0" quat="1 0 0 0">
+                    <geom class="leg_foot" type="mesh" name="Leg_foot6 geom" mesh="Leg_foot6" material="Leg_foot6" contype="1" conaffinity="1" />
+                    <site name="foot_site3" pos="0.12 -0.001 0" size="0.005" rgba="0 0 1 0.1"/>
+                  </body>
+                </body>
+
+                <joint type="hinge" name="left_front_knee" pos="0.18828007195887442 0.03437640266364251 0.018073225848690807"
+                       axis="-0.46104017651857876 0.8695073888321556 0.17719722458888715" range="-1.34 0.74"/>
+              </body>
+            </body>
+
+            <joint type="hinge" name="left_front_hip" pos="0.15237051279040464 0.014248641924215788 0.02984252523066577"
+                   axis="-0.4610401765185787 0.8695073888321556 0.17719722458888665" range="-1.1 1.1"/>
+          </body>
+        </body>
+
+        <joint type="hinge" name="left_front_yaw" pos="0.12133938021660812 -0.021602124516369777 0.03901821903604353"
+               axis="-0.004768051882588399 -0.20211048929575764 0.9793511197715937" range="-0.8 0.8"/>
+      </body>
+
+      <body name="servo13" pos="0 0 0" quat="1 0 0 0">
+        <geom class="servo" type="mesh" name="servo13 geom" mesh="servo13" material="servo13" contype="1" conaffinity="0" />
+        <body name="motor_bracket12" pos="0 0 0" quat="1 0 0 0">
+          <geom class="motor_bracket" type="mesh" name="motor_bracket12 geom" mesh="motor_bracket12" material="motor_bracket12" contype="1" conaffinity="0" />
+        </body>
+        <body name="Leg_adapter5" pos="0 0 0" quat="1 0 0 0">
+          <geom class="leg_adapter" type="mesh" name="Leg_adapter5 geom" mesh="Leg_adapter5" material="Leg_adapter5" contype="4" conaffinity="5" />
+          <body name="servo14" pos="0 0 0" quat="1 0 0 0">
+            <geom class="servo" type="mesh" name="servo14 geom" mesh="servo14" material="servo14" contype="1" conaffinity="0" />
+            <body name="motor_bracket13" pos="0 0 0" quat="1 0 0 0">
+              <geom class="motor_bracket" type="mesh" name="motor_bracket13 geom" mesh="motor_bracket13" material="motor_bracket13" contype="1" conaffinity="0" />
+            </body>
+            <body name="Leg_adapter_hip5" pos="0 0 0" quat="1 0 0 0">
+              <geom class="leg_adapter" type="mesh" name="Leg_adapter_hip5 geom" mesh="Leg_adapter_hip5" material="Leg_adapter_hip5" contype="4" conaffinity="5" />
+              <body name="servo15" pos="0 0 0" quat="1 0 0 0">
+                <geom class="servo" type="mesh" name="servo15 geom" mesh="servo15" material="servo15" contype="1" conaffinity="0" />
+                <body name="motor_bracket14" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="motor_bracket" type="mesh" name="motor_bracket14 geom" mesh="motor_bracket14" material="motor_bracket14" contype="1" conaffinity="0" />
+                </body>
+                <body name="Leg_adapter_knee5" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="leg_adapter" type="mesh" name="Leg_adapter_knee5 geom" mesh="Leg_adapter_knee5" material="Leg_adapter_knee5" contype="4" conaffinity="5" />
+                  <body name="Leg_foot3" pos="0 0 0" quat="1 0 0 0">
+                    <geom class="leg_foot" type="mesh" name="Leg_foot3 geom" mesh="Leg_foot3" material="Leg_foot3" contype="1" conaffinity="1" />
+                    <site name="foot_site4" pos="0.04 -0.12 -0.09" size="0.005" rgba="0 0 1 0.1"/>
+                  </body>
+                </body>
+
+                <joint type="hinge" name="right_mid_knee" pos="0.06384585324557952 -0.1462932499911243 -0.016957354146289193"
+                       axis="0.9783636705980744 -0.2035140871469756 -0.03723633154052947" range="-0.2 2.0"/>
+              </body>
+            </body>
+
+            <joint type="hinge" name="right_mid_hip" pos="0.07320777247694321 -0.1106644840058414 0.00367856366788641"
+                   axis="0.9783636705980749 -0.20351408714697217 -0.03723633154052816" range="-1.1 1.1"/>
+          </body>
+        </body>
+
+        <joint type="hinge" name="right_mid_yaw" pos="0.06707205882665528 -0.06987178343661787 0.0287925159309481"
+               axis="-0.004768051882588362 -0.20211048929575762 0.9793511197715936" range="-0.8 0.8"/>
+      </body>
+
+      <body name="servo16" pos="0 0 0" quat="1 0 0 0">
+        <geom class="servo" type="mesh" name="servo16 geom" mesh="servo16" material="servo16" contype="1" conaffinity="0" />
+        <body name="Leg_adapter6" pos="0 0 0" quat="1 0 0 0">
+          <geom class="leg_adapter" type="mesh" name="Leg_adapter6 geom" mesh="Leg_adapter6" material="Leg_adapter6" contype="4" conaffinity="5" />
+          <body name="servo17" pos="0 0 0" quat="1 0 0 0">
+            <geom class="servo" type="mesh" name="servo17 geom" mesh="servo17" material="servo17" contype="1" conaffinity="0" />
+            <body name="motor_bracket16" pos="0 0 0" quat="1 0 0 0">
+              <geom class="motor_bracket" type="mesh" name="motor_bracket16 geom" mesh="motor_bracket16" material="motor_bracket16" contype="1" conaffinity="0" />
+            </body>
+            <body name="Leg_adapter_hip6" pos="0 0 0" quat="1 0 0 0">
+              <geom class="leg_adapter" type="mesh" name="Leg_adapter_hip6 geom" mesh="Leg_adapter_hip6" material="Leg_adapter_hip6" contype="4" conaffinity="5" />
+              <body name="servo18" pos="0 0 0" quat="1 0 0 0">
+                <geom class="servo" type="mesh" name="servo18 geom" mesh="servo18" material="servo18" contype="1" conaffinity="0" />
+                <body name="motor_bracket17" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="motor_bracket" type="mesh" name="motor_bracket17 geom" mesh="motor_bracket17" material="motor_bracket17" contype="1" conaffinity="0" />
+                </body>
+                <body name="Leg_adapter_knee6" pos="0 0 0" quat="1 0 0 0">
+                  <geom class="leg_adapter" type="mesh" name="Leg_adapter_knee6 geom" mesh="Leg_adapter_knee6" material="Leg_adapter_knee6" contype="4" conaffinity="5" />
+                  <body name="Leg_foot4" pos="0 0 0" quat="1 0 0 0">
+                    <geom class="leg_foot" type="mesh" name="Leg_foot4 geom" mesh="Leg_foot4" material="Leg_foot4" contype="1" conaffinity="1" />
+                    <site name="foot_site5" pos="0.13 -0.17 -0.07" size="0.005" rgba="0 0 1 0.1"/>
+                  </body>
+                </body>
+
+                <joint type="hinge" name="right_front_knee" pos="0.13975356752487558 -0.15335316107157454 0.007465694170866819"
+                       axis="0.9944561333227823 0.10191905081095831 0.025874813593426957" range="-0.2 2.0"/>
+              </body>
+            </body>
+
+            <joint type="hinge" name="right_front_hip" pos="0.1366295930054685 -0.11079624007927827 0.003960147300896912"
+                   axis="0.9944561333227816 0.10191905081096207 0.025874813593426527" range="-1.1 1.1"/>
+          </body>
+        </body>
+
+        <joint type="hinge" name="right_front_yaw" pos="0.11690009303108334 -0.07397092594029563 0.02818916026729701"
+               axis="-0.004768051882588389 -0.20211048929575767 0.9793511197715938" range="-0.8 0.8"/>
+      </body>
+
+      <body name="battery_pack" pos="0 0 0" quat="1 0 0 0">
+        <geom class="battery_pack" type="mesh" name="battery_pack geom" mesh="battery_pack" material="battery_pack" contype="1" conaffinity="0" />
+      </body>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude body1="Leg_foot6" body2="Leg_adapter_hip4"/>   
+    <exclude body1="Leg_foot6" body2="Leg_adapter4"/>  
+    <exclude body1="Leg_adapter_knee4" body2="Leg_adapter4"/>   
+    <exclude body1="Leg_adapter_knee4" body2="Leg_adapter_hip4"/> 
+    <exclude body1="Leg_adapter_knee4" body2="Leg_foot6"/> 
+  </contact>
+  <equality/>
+  <tendon/>
+
+        <!-- 0 0 0   1 0 0 0   #freejoint - x y z, w x y z
+      0.738 0.759 0.29  #left_rear - yaw hip knee
+      0 0.251 -0.182     #right_rear - yaw hip knee
+      0.00 -0.493 -0.446  #left_mid - yaw hip knee
+      0.00 -1.01 0.861     #right_mid - yaw hip knee
+      0.61 -1.12 -0.425   #left_front - yaw hip knee
+      0 -0.461 0.666    #right_front - yaw hip knee -->
+
+  <keyframe>
+    <key name="home" qpos="
+      0 0 0   1 0 0 0   
+      0.738 0.759 0.29 
+      0 0.251 -0.182    
+      0.00 -0.493 -0.446  
+      0.00 -1.01 0.861    
+      0.61 -1.12 -0.425
+      0 -0.461 0.666"    
+    
+
+        ctrl="
+      0.738 0.759 0.29      
+      0 0.251 -0.182     
+      0.00 -0.493 -0.446    
+      0.00 -1.01 0.861      
+      0.61 -1.12 -0.425     
+      0 -0.461 0.666    
+    "/>
+
+  </keyframe>
+
+  <!-- 액추에이터: 새 이름 + 토크 한계 클래스 적용 -->
+  <actuator>
+    <!-- rear: left -->
+    <position class="sg90" name="left_rear_yaw_act"  joint="left_rear_yaw"  ctrllimited="true" ctrlrange="0.24 0.84"/>
+    <position class="sg90" name="left_rear_hip_act"  joint="left_rear_hip"  ctrllimited="true" ctrlrange="0.175 0.818"/>
+    <position class="sg90" name="left_rear_knee_act" joint="left_rear_knee" ctrllimited="true" ctrlrange="-0.747 0.477"/>
+
+    <!-- rear: right -->
+    <position class="sg90" name="right_rear_yaw_act"  joint="right_rear_yaw"  ctrllimited="true" ctrlrange="-0.71 -0.1"/>
+    <position class="sg90" name="right_rear_hip_act"  joint="right_rear_hip"  ctrllimited="true" ctrlrange="-0.128 0.35"/>
+    <position class="sg90" name="right_rear_knee_act" joint="right_rear_knee" ctrllimited="true" ctrlrange="-1.17 0.04"/>
+
+    <!-- mid: left -->
+    <position class="sg90" name="left_mid_yaw_act"  joint="left_mid_yaw"  ctrllimited="true" ctrlrange="-0.6 0.6"/>
+    <position class="sg90" name="left_mid_hip_act"  joint="left_mid_hip"  ctrllimited="true" ctrlrange="-1.025 -0.42"/>
+    <position class="sg90" name="left_mid_knee_act" joint="left_mid_knee" ctrllimited="true" ctrlrange="-1.32 -0.11"/>
+
+    <!-- mid: right -->
+    <position class="sg90" name="right_mid_yaw_act"  joint="right_mid_yaw"  ctrllimited="true" ctrlrange="-0.48 0.74"/>
+    <position class="sg90" name="right_mid_hip_act"  joint="right_mid_hip"  ctrllimited="true" ctrlrange="-1.525 -0.92"/>
+    <position class="sg90" name="right_mid_knee_act" joint="right_mid_knee" ctrllimited="true" ctrlrange="0 1.17"/>
+
+    <!-- front: left -->
+    <position class="sg90" name="left_front_yaw_act"  joint="left_front_yaw"  ctrllimited="true" ctrlrange="0.39 0.99"/>
+    <position class="sg90" name="left_front_hip_act"  joint="left_front_hip"  ctrllimited="true" ctrlrange="-1.625 -1"/>
+    <position class="sg90" name="left_front_knee_act" joint="left_front_knee" ctrllimited="true" ctrlrange="-1.34 -0.13"/>
+
+    <!-- front: right -->
+    <position class="sg90" name="right_front_yaw_act"  joint="right_front_yaw"  ctrllimited="true" ctrlrange="-0.17 0.45"/>
+    <position class="sg90" name="right_front_hip_act"  joint="right_front_hip"  ctrllimited="true" ctrlrange="-0.98 -0.35"/>
+    <position class="sg90" name="right_front_knee_act" joint="right_front_knee" ctrllimited="true" ctrlrange="-0.26 0.95"/>
+    
+  </actuator>
+
+
+
+
+  <!-- 센서: 새 이름 -->
+  <sensor>
+    <!-- rear -->
+    <accelerometer name="imu_acc" site="imu_site"/>
+    <gyro          name="imu_gyro" site="imu_site"/>
+    <magnetometer  name="imu_mag" site="imu_site"/>
+
+    <jointpos name="left_rear_yaw_pos"  joint="left_rear_yaw"/>
+    <jointpos name="left_rear_hip_pos"  joint="left_rear_hip"/>
+    <jointpos name="left_rear_knee_pos" joint="left_rear_knee"/>
+
+    <jointpos name="right_rear_yaw_pos"  joint="right_rear_yaw"/>
+    <jointpos name="right_rear_hip_pos"  joint="right_rear_hip"/>
+    <jointpos name="right_rear_knee_pos" joint="right_rear_knee"/>
+
+    <!-- mid -->
+    <jointpos name="left_mid_yaw_pos"  joint="left_mid_yaw"/>
+    <jointpos name="left_mid_hip_pos"  joint="left_mid_hip"/>
+    <jointpos name="left_mid_knee_pos" joint="left_mid_knee"/>
+
+    <jointpos name="right_mid_yaw_pos"  joint="right_mid_yaw"/>
+    <jointpos name="right_mid_hip_pos"  joint="right_mid_hip"/>
+    <jointpos name="right_mid_knee_pos" joint="right_mid_knee"/>
+
+    <!-- front -->
+    <jointpos name="left_front_yaw_pos"  joint="left_front_yaw"/>
+    <jointpos name="left_front_hip_pos"  joint="left_front_hip"/>
+    <jointpos name="left_front_knee_pos" joint="left_front_knee"/>
+
+    <jointpos name="right_front_yaw_pos"  joint="right_front_yaw"/>
+    <jointpos name="right_front_hip_pos"  joint="right_front_hip"/>
+    <jointpos name="right_front_knee_pos" joint="right_front_knee"/>
+
+    <touch name="touch_left_rear" site="foot_site1"/>
+    <touch name="touch_left_mid" site="foot_site2"/>
+    <touch name="touch_left_front" site="foot_site3"/>
+    <touch name="touch_right_mid" site="foot_site4"/>
+    <touch name="touch_right_front" site="foot_site5"/>
+    <touch name="touch_right_rear" site="foot_site6"/>
+  </sensor>
+</mujoco>

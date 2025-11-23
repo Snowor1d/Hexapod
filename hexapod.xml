@@ -65,7 +65,7 @@
           <body name="leg_fl_knee" pos="0.12 0 0">
             <joint name="knee_fl" type="hinge" axis="0 1 0" range="-20 120"/>
             <geom  name="tibia_fl" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="1 0 0 1"/>
-            <geom  name="foot_fl"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <geom  name="foot_fl"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.4 1.0 1"/>
             <site  name="foot_site_fl" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
           </body>
         </body>
@@ -83,7 +83,7 @@
           <body name="leg_fr_knee" pos="0.12 0 0">
             <joint name="knee_fr" type="hinge" axis="0 1 0" range="-20 120"/>
             <geom  name="tibia_fr" fromto="0 0 0  0.14 0 0" size="0.018" mass="0.01" rgba="1 0 0 1"/>
-            <geom  name="foot_fr"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.1 0.1 1"/>
+            <geom  name="foot_fr"  type="sphere" class="foot" pos="0.14 0 0" size="0.02" mass="0.01" rgba="0.1 0.4 1.0 1"/>
             <site  name="foot_site_fr" pos="0.14 0 0" size="0.022" rgba="0 0 1 0.3"/>
           </body>
         </body>
@@ -166,6 +166,7 @@
   <sensor>
     <accelerometer name="imu_acc" site="imu_site"/>
     <gyro          name="imu_gyro" site="imu_site"/>
+    <magnetometer  name="imu_mag" site="imu_site"/>
     <touch name="touch_fl" site="foot_site_fl"/>
     <touch name="touch_fr" site="foot_site_fr"/>
     <touch name="touch_ml" site="foot_site_ml"/>
